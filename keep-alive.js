@@ -4,7 +4,7 @@
  * pour empêcher le serveur de s'endormir.
  */
 
-const URL = 'https://VOTRE-APP-RENDER.onrender.com/health';
+const URL = 'https://cibie-server.onrender.com/health';
 const INTERVAL = 10 * 60 * 1000; // 10 minutes
 
 function poke() {
