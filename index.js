@@ -11,13 +11,17 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+// Route de santé (Healthcheck)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Serveur de relais Cibie opérationnel' });
+});
+
 /**
  * Endpoint de Handshake (Relais d'Authentification)
- * Permet à l'application Android d'obtenir un jeton d'accès pour une salle LiveKit
- * basée sur l'index H3.
  */
 app.post('/auth/handshake', async (req, res) => {
   const { username, h3Index } = req.body;
+  console.log(`[Handshake] Requête reçue pour l'utilisateur: ${username}, H3 Index: ${h3Index}`);
 
   if (!username || !h3Index) {
     return res.status(400).json({ 
