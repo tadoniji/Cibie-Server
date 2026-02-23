@@ -31,7 +31,21 @@ Ce serveur Node.js agit comme un relais d'authentification entre l'application A
 
 ## API
 
-### Handshake (Authentification)
+### Obtenir un Token (Recommandé)
+- **URL** : `/get_token`
+- **Méthode** : `GET`
+- **Paramètres Query** :
+  - `zone` : Index H3 de la zone (ex: `861f1d48fffffff`)
+  - `identity` : Pseudo + ID unique (ex: `PIERRE-FD23E1`)
+- **Réponse (JSON)** :
+  ```json
+  {
+    "token": "eyJhbG...",
+    "userCount": 5
+  }
+  ```
+
+### Handshake (Ancien - Authentification)
 - **URL** : `/auth/handshake`
 - **Méthode** : `POST`
 - **Corps (JSON)** :
