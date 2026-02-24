@@ -1,11 +1,11 @@
-# Cibie-Back : Serveur de Relais LiveKit (ProxChat H3)
+# Cibie-Back : Serveur de Relais LiveKit (ProxChat)
 
-Ce serveur Node.js agit comme un relais d'authentification entre l'application Android **Cibie** et l'infrastructure **LiveKit**. Il permet de générer des jetons d'accès sécurisés basés sur le quadrillage géographique H3.
+Ce serveur Node.js agit comme un relais d'authentification entre l'application Android **Cibie** et l'infrastructure **LiveKit**. Il permet de générer des jetons d'accès sécurisés basés sur des IDs de zone.
 
 ## Fonctionnement du Relais
 
-1. L'application Android détecte la position de l'utilisateur et calcule l'index H3 correspondant.
-2. L'application envoie un **Handshake** à ce serveur avec son `username` et le `h3Index`.
+1. L'application Android détecte la position de l'utilisateur et identifie la zone correspondante (Zone ID).
+2. L'application envoie une requête à ce serveur avec son `identity` et le `zone` ID.
 3. Ce serveur valide la demande et génère un jeton (JWT) signé via le SDK LiveKit.
 4. L'application reçoit le jeton et se connecte **directement** au serveur LiveKit pour l'audio.
 
@@ -35,7 +35,7 @@ Ce serveur Node.js agit comme un relais d'authentification entre l'application A
 - **URL** : `/get_token`
 - **Méthode** : `GET`
 - **Paramètres Query** :
-  - `zone` : Index H3 de la zone (ex: `861f1d48fffffff`)
+  - `zone` : Identifiant de la zone (Zone ID)
   - `identity` : Pseudo + ID unique (ex: `PIERRE-FD23E1`)
 - **Réponse (JSON)** :
   ```json
@@ -45,7 +45,7 @@ Ce serveur Node.js agit comme un relais d'authentification entre l'application A
   }
   ```
 
-### Handshake (Ancien - Authentification)
+### Handshake (Legacy - H3)
 - **URL** : `/auth/handshake`
 - **Méthode** : `POST`
 - **Corps (JSON)** :

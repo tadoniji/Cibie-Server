@@ -28,17 +28,28 @@ app.get('/health', (req, res) => {
  * Paramètres Query : zone, identity
  */
 app.get('/get_token', async (req, res) => {
-  const { zone, identity } = req.query;
+  const { zone, identity } = req.query; // 'zone' est le Zone ID
 
   if (!zone || !identity) {
     return res.status(400).json({ 
-      error: 'Les paramètres "zone" et "identity" sont requis.' 
+      error: 'Les paramètres "zone" (Zone ID) et "identity" sont requis.' 
     });
   }
 
-  console.log(`[GetToken] Requête reçue - Zone: ${zone}, Identity: ${identity}`);
+  console.log(`[GetToken] Requête reçue - Zone ID: ${zone}, Identity: ${identity}`);
 
   try {
+    // Création de la room si elle n'existe pas
+    try {
+      await roomService.createRoom({
+        name: zone,
+        emptyTimeout: 60, // Fermeture de la salle après 60s si elle est vide
+      });
+      console.log(`[GetToken] Room vérifiée/créée : ${zone}`);
+    } catch (err) {
+      console.warn(`[GetToken] Erreur non-critique lors de la création de la room ${zone}:`, err.message);
+    }
+
     // Génération du token LiveKit
     const at = new AccessToken(
       process.env.LIVEKIT_API_KEY,
@@ -104,6 +115,19 @@ app.post('/auth/handshake', async (req, res) => {
   }
 
   try {
+    const roomName = `cibie_h3_${h3Index}`;
+    
+    // Création de la room si elle n'existe pas
+    try {
+      await roomService.createRoom({
+        name: roomName,
+        emptyTimeout: 60,
+      });
+      console.log(`[Handshake] Room vérifiée/créée : ${roomName}`);
+    } catch (err) {
+      console.warn(`[Handshake] Erreur non-critique lors de la création de la room ${roomName}:`, err.message);
+    }
+
     // ... reste de la logique ...
     const at = new AccessToken(
       process.env.LIVEKIT_API_KEY,
